@@ -9,5 +9,4 @@ public class TestBase {
     static void beforeAll() {
         Configuration.startMaximized = true;
     }
-
 }
