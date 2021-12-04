@@ -1,51 +1,43 @@
 package tests;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
 
 public class RegistrationFormTests extends TestBase {
 
     @Test
+    @DisplayName("Заполнение формы регистрации")
     void registrationTest() {
-        open("https://demoqa.com/automation-practice-form");
-        $("#firstName").setValue("Denis");
-        $("#lastName").setValue("Illarionov");
-        $("#userEmail").setValue("123@mt.com");
-        $("[for='gender-radio-2']").click();
-        $("#userNumber").setValue("1234567890");
+        registrationsPage.openPage()
+                .typeFirstName("Denis")
+                .typeLastName("Illarionov")
+                .typeEmailAddress("123@mail.ru")
+                .selectGender("2")
+                .typeMobileNumber("1234567890");
 
-        $("#dateOfBirthInput").click();
-        $(".react-datepicker__month-select").selectOption("May");
-        $(".react-datepicker__year-select").selectOption("2013");
-        $(".react-datepicker__day--028:not(.react-datepicker__day--outside-month)").click();
+        registrationsPage.calendar.setDate("28", "May", "2013");
 
-        $("#subjectsInput").setValue("Math").pressEnter();
-        $("[for=hobbies-checkbox-2]").click();
-        $("#hobbiesWrapper").$(byText("Music")).click();
-        $("#uploadPicture").uploadFromClasspath("img/file1.png");
+        registrationsPage.typeSubject("Math")
+                .selectHobbies("2")
+                .selectHobbies("3")
+                .uploadFile("img/file1.png")
+                .typeAddress("someAddress");
 
-        $("#currentAddress").setValue("someAddress");
-        $("#state").click();
-        $("#react-select-3-input").setValue("Rajasthan").pressEnter();
-        $("#city").click();
-        $("#stateCity-wrapper").$(byText("Jaiselmer")).scrollTo().click();
-        $("#submit").click();
+        registrationsPage.dropdownList.selectState("Rajasthan");
+        registrationsPage.dropdownList.selectCity("Jaiselmer");
+        registrationsPage.clickSubmit();
 
         //Проверка данных
-        $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
-        $(".table-responsive").shouldHave(text("Denis Illarionov"),
-                text("123@mt.com"),
-                text("Female"),
-                text("1234567890"),
-                text("28 May,2013"),
-                text("Maths"),
-                text("Reading, Music"),
-                text("file1.png"),
-                text("someAddress"),
-                text("Rajasthan Jaiselmer"));
+        registrationsPage.checkResultsTitle();
+        registrationsPage.checkResultsValue("Student Name", "Denis Illarionov")
+                .checkResultsValue("Student Email", "123@mail.ru")
+                .checkResultsValue("Gender", "Female")
+                .checkResultsValue("Mobile", "1234567890")
+                .checkResultsValue("Date of Birth", "28 May,2013")
+                .checkResultsValue("Subjects", "Maths")
+                .checkResultsValue("Hobbies", "Reading, Music")
+                .checkResultsValue("Picture", "file1.png")
+                .checkResultsValue("Address", "someAddress")
+                .checkResultsValue("State and City", "Rajasthan Jaiselmer");
     }
 }
