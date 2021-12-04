@@ -1,12 +1,12 @@
 package tests;
 
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 public class RegistrationFormTests extends TestBase {
 
     @Test
-    @DisplayName("Заполнение формы регистрации")
+    @Tag("properties")
     void registrationTest() {
         registrationsPage.openPage()
                 .typeFirstName("Denis")
